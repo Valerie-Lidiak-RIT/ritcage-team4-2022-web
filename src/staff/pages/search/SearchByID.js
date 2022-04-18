@@ -17,6 +17,9 @@ const SearchByID = () => {
     }
   }, []);
 
+  // need this function to format the date for parameters in the check in routes
+  // check in requires a parameter called "checkin"
+  // It will need to be formatted as follows: YYYY-MM-DD HH:MM:SS
   function formatDate(date) {
     var dd = String(date.getDate()).padStart(2, "0");
     var mm = String(date.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -39,6 +42,11 @@ const SearchByID = () => {
     return date;
   }
 
+  // checkin will use two endpoints:
+  // - borrower_contents/item/reservation/ (1)
+  // - borrower_contents/checkin (2)
+  // We will use (1) to get the reservationID, which is a
+  // required parameter for (2)
   const checkin = async (e) => {
     e.preventDefault();
     console.log("checking in item: " + itemID);

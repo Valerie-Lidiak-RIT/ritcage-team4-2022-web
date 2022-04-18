@@ -7,15 +7,24 @@ const NavBar = () => {
     const navigate = useNavigate();
     const [isMobile, setMobile] = useState(window.innerWidth < 699);
       
+    // set value of isMobile to true using this function
     const updateMedia = () => {
         setMobile(window.innerWidth < 699);
     };
       
+    // if windown even happened to be the right size,
+    // call the updateMedia function
+    // if isMobile set to true, the navigation bar on the left of the screen
+    // will shrink to icons
+    // Doing this allows it to adapt to mobile interface
     useEffect(() => {
         window.addEventListener("resize", updateMedia);
         return () => window.removeEventListener("resize", updateMedia);
     });
 
+    // Logging off means clear everything
+    // Therefore we clear localStorage as well
+    // After that we need to navigate back to the login screen
     const logOut = async (e) => {
         e.preventDefault();
         localStorage.clear();

@@ -28,6 +28,8 @@ import StaffCheckOut from "./staff/pages/checkout/StaffCheckOut";
 function App() {
   const API_URL = "http://192.168.192.31:3000/item_types";
   const [itemTypes, setItemTypes] = useState([]);
+  
+  // Query the api call to get item from inventory, set the itemType array
   useEffect(() => {
     const loadTypes = async () => {
       let result = await fetch(API_URL);
@@ -35,6 +37,8 @@ function App() {
       let res = await result.json();
       console.log(res.item_type);
       setItemTypes(res.item_type);
+      
+      // set localStorage just incase the query failed next time
       if (!localStorage.getItem("all-items", JSON.stringify(res.item_type))) {
         localStorage.setItem("all-items", JSON.stringify(res.item_type));
       }
@@ -45,13 +49,21 @@ function App() {
     };
     loadTypes();
   }, []);
+  
+  // Create empty useState to store in values
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  
   useEffect(() => {
+    // We need to ignore lowercase, and we just filter based of the itemType array
+    // itemType array was set earlier when we query all the iventory items above
     const filteredResults = itemTypes.filter((itemType) =>
       itemType.model.toLowerCase().includes(search.toLowerCase())
     );
 
+    // We want to show the newest item that got added (last to first view)
+    // else, we could just set it as filterResults without using reverse(),
+    // but it would means the viewer will view from first to last
     setSearchResults(filteredResults.reverse());
   }, [itemTypes, search]);
 
@@ -78,7 +90,16 @@ function App() {
           <Route path="/kit/viewkit/:id" element={<ViewKit />} />
           <Route path="/search/viewitem/:id" element={<ItemDetails />} />
 
-          {/* Staff section */}
+          {/* 
+            Staff section 
+            - StaffLogin: Staff Login Page
+            - StaffDashboard: Staff Home Page
+            - StaffCheckOut: Check Out
+            - StaffCheckIn: Check In
+            - StaffReservation: List of all users (faculty and student) reservations
+            - StaffKit: View List of Kits and Create Kit, including adding items to Kit
+            - Inventory: Inventory Management, able to view/add items
+          */}
           <Route path="/staff" element={<StaffLogin />} />
           <Route path="/staff/dashboard" element={<StaffDashboard />} />
           <Route path="/staff/checkout" element={<StaffCheckOut />} />
